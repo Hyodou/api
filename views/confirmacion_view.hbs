@@ -1,0 +1,117 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Pendientes por Confirmar</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link href="/assets/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <script src="/assets/js/jquery.dataTables.min.js"></script>
+  <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript">
+    $(document).ready( function () {
+      $.noConflict();
+      var table = $('#mytable').DataTable();
+    });
+</script>
+</head>
+<body>
+  <div class="container">
+    <h2>Lista de Pendientes por Confirmar</h2>
+    <table class="table table-striped" id="mytable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Estado</th>  
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+         {{#each results}}
+        <tr>
+          <td>{{ userid }}</td>
+          <td>{{ estado }}</td>  
+          <td>{{ nombre }} {{ apellido }}</td>
+          <td>{{ email }}</td>
+          <td>{{ telefono }}</td>
+          <td>{{ direccion }}</td>
+          <td>
+            <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-id="{{ id }}" data-userid="{{ userid }}"data-estado="{{ estado }}" data-nombre="{{ nombre }}" data-apellido="{{ apellido }}" data-email="{{ email }}" data-telefono="{{ telefono }}" data-direccion="{{direccion}}">Confirmar</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+    <!-- Modal Add Product-->
+     <!-- Modal Update Product-->
+   <form action="/confirmaciones/update" method="post">
+       <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Confirmar</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <input type="text" name="nombre" class="form-control nombre" placeholder="Nombre" readonly>
+              </div>
+ 
+              <div class="form-group">
+                  <input type="text" name="apellido" class="form-control apellido" placeholder="Apellido" readonly>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="telefono" class="form-control telefono" placeholder="Telefono" readonly>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="direccion" class="form-control direccion" placeholder="Dirección" readonly>
+              </div>
+              <div class="form-group">
+                  <input type="radio" name ="estado" required value="2"> <label> Confirmar </label>
+ 
+                  <input type="radio" name ="estado" value="6"> <label> Rechazar</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="id" class="id">  
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Actualizar</button>
+            </div>
+          </div>
+        </div>
+       </div>
+  </form>
+
+<script src="/assets/js/jquery-3.4.1.js"></script>
+<script src="/assets/js/bootstrap.js"></script>
+<script>
+    $(document).ready(function(){
+            //showing data to edit modal      
+        $('#mytable').on('click','.edit',function(){
+        var userid = $(this).data('userid');
+        var nombre = $(this).data('nombre');
+        var apellido = $(this).data('apellido');
+        var email = $(this).data('email');
+        var telefono = $(this).data('telefono');
+        var direccion = $(this).data('direccion');
+        var estado = $(this).data('estado');
+        var id = $(this).data('id');
+        $('#EditModal').modal('show');
+        $('.nombre').val(nombre);
+        $('.apellido').val(apellido);
+        $('.email').val(email);
+        $('.telefono').val(telefono);
+        $('.userid').val(userid);
+        $('.direccion').val(direccion);
+        $('.estado').val(estado);
+        $('.id').val(id);
+      });
+    });
+</script>
+</body>
+</html>

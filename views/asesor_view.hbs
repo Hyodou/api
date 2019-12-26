@@ -1,0 +1,185 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Asesores</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link href="/assets/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <script src="/assets/js/jquery.dataTables.min.js"></script>
+  <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript">
+    $(document).ready( function () {
+      $.noConflict();
+      var table = $('#mytable').DataTable();
+    });
+</script>
+</head>
+<body>
+  <div class="container">
+    <h2>Lista de Asesores</h2>
+        <button class="btn btn-success" data-toggle="modal" data-target="#myModalAdd">Añadir Nuevo</button>
+    <table class="table table-striped" id="mytable">
+      <thead>
+        <tr>
+          <th>ID</th>  
+          <th>Cédula</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Contraseña</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+         {{#each results}}
+        <tr>
+          <td>{{ idasesor }}</td>  
+          <td>{{ cedula }}</td>
+          <td>{{ nombre }}</td>
+          <td>{{ apellido }}</td>
+          <td>{{ email }}</td>
+          <td>{{ telefono }}</td>
+          <td>{{ contraseñaasesor }}</td>
+          <td>
+            <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-idasesor="{{ idasesor }}"data-cedula="{{ cedula }}" data-nombre="{{ nombre }}" data-apellido="{{ apellido }}" data-email="{{ email }}"data-telefono="{{ telefono }}"data-contraseñaasesor="{{ contraseñaasesor }}">Editar</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+ 
+    <!-- Modal Add Product-->
+      <form action="/asesores/save" method="post">
+        <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Añadir Nuevo Asesor</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <div class="form-group">
+                   <input type="text" name="cedula" class="form-control" placeholder="Cedula" required>
+               </div>
+ 
+               <div class="form-group">
+                   <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="email" class="form-control" placeholder="Correo Electrónico" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="telefono" class="form-control" placeholder="Teléfono" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="contraseñaasesor" class="form-control" placeholder="Contraseña" required>
+               </div>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+               <button type="submit" class="btn btn-primary">Guardar</button>
+             </div>
+           </div>
+         </div>
+        </div>
+     </form>
+ 
+     <!-- Modal Update Product-->
+   <form action="/asesores/update" method="post">
+       <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Editar Asesor</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <input type="text" name="nombre" class="form-control nombre" placeholder="Nombre" required>
+              </div>
+ 
+              <div class="form-group">
+                  <input type="text" name="apellido" class="form-control apellido" placeholder="Apellido" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="email" class="form-control email" placeholder="Correo Electrónico" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="telefono" class="form-control telefono" placeholder="Teléfono" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="contraseñaasesor" class="form-control contraseñaasesor" placeholder="Contraseña" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="cedula" class="cedula">  
+              <input type="hidden" name="idasesor" class="idasesor">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Actualizar</button>
+            </div>
+          </div>
+        </div>
+       </div>
+  </form>
+ 
+     <!-- Modal Delete Product-->
+      <form id="add-row-form" action="/delete" method="post">
+         <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                                        <h5 class="modal-title" id="myModalLabel">Delete Product</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                   </div>
+                   <div class="modal-body">
+                                                 <strong>Are you sure to delete this data?</strong>
+                   </div>
+                   <div class="modal-footer">
+                                            <input type="hidden" name="product_id" class="form-control product_id2" required>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Delete</button>
+                   </div>
+                    </div>
+            </div>
+         </div>
+     </form>
+ 
+<script src="/assets/js/jquery-3.4.1.js"></script>
+<script src="/assets/js/bootstrap.js"></script>
+<script>
+    $(document).ready(function(){
+            //showing data to edit modal      
+        $('#mytable').on('click','.edit',function(){
+        var cedula = $(this).data('cedula');
+        var nombre = $(this).data('nombre');
+        var apellido = $(this).data('apellido');
+        var email = $(this).data('email');
+        var telefono = $(this).data('telefono');
+        var contraseñaasesor = $(this).data('contraseñaasesor');
+        $('#EditModal').modal('show');
+        $('.nombre').val(nombre);
+        $('.apellido').val(apellido);
+        $('.email').val(email);
+        $('.telefono').val(telefono);
+        $('.cedula').val(cedula);
+        $('.contraseñaasesor').val(contraseñaasesor);
+      });
+            //showing delete record modal
+            //$('#mytable').on('click','.delete',function(){
+        //var product_id = $(this).data('id');
+        //$('#DeleteModal').modal('show');
+        //$('.product_id2').val(product_id);
+      //});
+ 
+    });
+</script>
+</body>
+</html>
