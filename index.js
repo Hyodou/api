@@ -21,12 +21,12 @@ app.use(session({
 //database
 const http = require('http');
 
-const hostname = '127.0.0.1';
+const hostname = 'remotemysql.com';
 var mysqlConnection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'ctapp',
+  host: 'remotemysql.com',
+  user: 'lLQ3ASPdO3',
+  password: '3IdvnZQuK8',
+  database: 'lLQ3ASPdO3',
   multipleStatements: true
   });
 mysqlConnection.connect((err)=> {
@@ -107,7 +107,7 @@ app.post('/administradores/update',(req, res) => {
 
 //cliente  
 app.get('/clientes' , (req, res) => {
-  let sql = "select idcliente, cedula, nombre, apellido, email, telefono, direccion from user u, cliente a where u.cedula = a.userid";
+  let sql = "select idcliente, nombrestadoventa as estado, cedula, nombre, apellido, email, telefono, direccion from registro r, estadoventa e, user u, cliente a where r.clienteid = a.userid and u.cedula = a.userid and r.estadoid = e.idestadoventa";
   let query = mysqlConnection.query(sql, (err, results) => {
     if(err) throw err;
     res.render('cliente_view',{
@@ -241,7 +241,7 @@ app.post('/confirmaciones/update', (req, res) =>{
 });
 
 app.get('/asignaciones' , (req, res) => {
-  let sql = "select clienteid, userid, nombrestadoventa as estado, nombre, apellido, email, telefono, direccion from registro r, cliente c, user u, estadoventa e where r.clienteid = c.userid and c.userid = u.cedula and r.estadoid = e.idestadoventa and r.estadoid = 2";
+  let sql = "select r.id as registroid, clienteid, userid, nombrestadoventa as estado, nombre, apellido, email, telefono, direccion from registro r, cliente c, user u, estadoventa e where r.clienteid = c.userid and c.userid = u.cedula and r.estadoid = e.idestadoventa and r.estadoid = 2";
   let query = mysqlConnection.query(sql, (err, results) => {
     if(err) throw err;
     let sql2 = "select idasesor, nombre as nombreasesor, apellido as apellidoasesor from asesor a, user u where a.userid = u.cedula";
@@ -268,12 +268,12 @@ app.get('/registro' , (req, res) => {
 });
 
 app.post('/asignaciones/save',(req, res) => {
-  let data = {clienteid: req.body.clienteid, asesorid: req.body.asesorid};
+  let data = {registroid: req.body.registroid, asesorid: req.body.asesorid};
   let sql = "INSERT INTO asignacion SET ?";
   let query = mysqlConnection.query(sql, data,(err, results) => {
     if(err) throw err;
   });
-  let sql2 = "UPDATE registro SET estadoid='3'";
+  let sql2 = "UPDATE registro SET estadoid='3' where id="+req.body.registroid;
   let query2 = mysqlConnection.query(sql2,(err,results)=>{
     if(err) throw err;
     res.redirect('/asignaciones');
@@ -390,13 +390,33 @@ app.post('/login', (req, res) =>{
         var dir = "/vregistro/"+un;
         res.redirect(dir);
       }else{
-        res.send('Nombre de Usuario o Contraseña Incorrecto');
+        mysqlConnection.query('SELECT * FROM administrador WHERE userid = ? AND contraseñaadministrador = ?', [username, password], function(err3, results3){
+        if(err3) throw err3;
+        var lengt = results3.length;
+        if(lengt > 0){
+          req.session.loggedin = true;
+          req.session.username = username;
+          res.redirect('/clientes');
+        }else{
+          mysqlConnection.query('SELECT * FROM asesor WHERE userid = ? AND contraseñaasesor = ?', [username, password], function(err4, results4){
+            if (err4) throw err4;
+            var lengh = results4.length;
+            if(lengh > 0){
+              req.session.loggedin = true;
+              req.session.username = username;
+              var un = results4[0].idasesor;
+              var dir = "/aregistro/"+un;
+              res.redirect(dir);
+            }else{
+              res.redirect('/');
+            }
+          });
+        }
+        });
       }
-      res.end();
     });
   }else{
     res.send('Ingrese Nombre de Usuario y Contraseña');
-    res.end();
   }
 });
 
@@ -413,11 +433,21 @@ app.get('/register', (req, res) =>{
 
 // registro para asesores
 app.get('/aregistro/:id', (req, res) =>{
+  var user;
+  var idv;
+  let usql = "select idasesor, nombre, apellido from user u, asesor v where v.userid = u.cedula and v.idasesor = "+req.params.id;
+  let uquery = mysqlConnection.query(usql, (uerr, uresults) =>{
+    if(uerr) throw uerr;
+    user = ""+uresults[0].nombre+" "+uresults[0].apellido;
+    idv = uresults[0].idvendedor;
+  });
   let sql = "select id, userid, valor, nombre, apellido, email, telefono, direccion from asignacion a, registro r, cliente c, user u where a.registroid = r.id and r.clienteid = c.userid and c.userid = u.cedula and asesorid = "+req.params.id;
   let query = mysqlConnection.query(sql, (err, results) =>{
     if(err) throw err;  
     res.render('aregistro_view', {
-       results: results
+       results: results,
+       user: user,
+       idv: idv
     });
   });
 });

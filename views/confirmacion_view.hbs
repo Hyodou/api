@@ -4,19 +4,90 @@
     <title>Pendientes por Confirmar</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link href="/assets/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
-    <script src="/assets/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+   <script src="/assets/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
   <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-  <script type="text/javascript">
-    $(document).ready( function () {
-      $.noConflict();
-      var table = $('#mytable').DataTable();
-    });
-</script>
+  <link href="/assets/css/sidebar.css" rel="stylesheet" type="text/css"/>
+  <link href="/assets/css/material-design-iconic-font.css" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.1/css/mdb.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.1/js/mdb.min.js"></script>
 </head>
 <body>
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3><a href="/user"><img src="/assets/img/logof.png"/></a></h3>
+            <strong><a href="/user"><img src="/assets/img/logot.png"/></a></strong>
+        </div>
+
+        <ul class="list-unstyled components">
+            
+            <li>
+                <a href="/clientes">
+                    <i class="fa fa-user"></i>
+                    Clientes
+                </a>
+            </li>
+            <li>
+                <a href="/vendedores">
+                    <i class="fa fa-briefcase"></i>
+                    Vendedores
+                </a>
+            </li>
+            <li>
+                <a href="/asesores">
+                    <i class="fa fa-handshake-o"></i>
+                    Asesores
+                </a>
+            </li>
+            <li>
+                <a href="/confirmaciones">
+                    <i class="fa fa-phone"></i>
+                    Pendientes por Llamar
+                </a>
+            </li>
+            <li>
+                <a href="/asignaciones">
+                    <i class="fa fa-star-o"></i>
+                    Pendientes por Visitar
+                </a>
+            </li>
+            <!--<li>
+                <a href="#">
+                    <i class="fa fa-briefcase"></i>
+                    Pendientes por liquidar
+                </a>
+            </li>-->
+        </ul>
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+      <nav class="mb-4 navbar navbar-expand-lg navbar-dark cyan">
+			<a class="navbar-brand font-bold" href="#">Construtodo Santa Marta</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSuapportedContent-4">
+				<ul class="navbar-nav ml-auto">
+					
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> Bienvenido, Administrador </a>
+						<div class="dropdown-menu dropdown-menu-right dropdown-cyan" aria-labelledby="navbarDropdownMenuLink-4">
+							<a class="dropdown-item" href="/logout">Salir</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</nav>
   <div class="container">
     <h2>Lista de Pendientes por Confirmar</h2>
-    <table class="table table-striped" id="mytable">
+    <table class="table table-responsive" id="mytable">
       <thead>
         <tr>
           <th>ID</th>
@@ -86,7 +157,8 @@
         </div>
        </div>
   </form>
-
+    </div>
+  </div>
 <script src="/assets/js/jquery-3.4.1.js"></script>
 <script src="/assets/js/bootstrap.js"></script>
 <script>
