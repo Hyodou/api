@@ -57,7 +57,7 @@
 		</nav>
   <div class="container">
     <h2>Lista de Visitas Pendientes</h2>
-    <table class="table table-responsive" id="mytable">
+    <table class="table table-responsive" id="mytable" data-asesorid="{{idv}}">
       <thead>
         <tr>
           <th>ID</th>  
@@ -77,7 +77,7 @@
           <td>{{ telefono }}</td>
           <td>{{ direccion }}</td>
           <td>
-            <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-id="{{ id }}" data-userid="{{ userid }}"data-estado="{{ estado }}" data-nombre="{{ nombre }}" data-apellido="{{ apellido }}" data-email="{{ email }}" data-telefono="{{ telefono }}" data-direccion="{{direccion}}">Confirmar</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-id="{{ id }}" data-userid="{{ userid }}"data-estado="{{ estado }}" data-nombre="{{ nombre }}" data-apellido="{{ apellido }}" data-email="{{ email }}" data-telefono="{{ telefono }}" data-direccion="{{direccion}}" data-asesorid = "{{ asesorid }}">Confirmar</a>
           </td>
         </tr>
         {{/each}}
@@ -86,7 +86,7 @@
   </div>
     <!-- Modal Add Product-->
      <!-- Modal Update Product-->
-   <form action="/confirmaciones/update" method="post">
+   <form action="/aregistro/update" method="post">
        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -97,6 +97,9 @@
               </button>
             </div>
             <div class="modal-body">
+              <div class="form-group">
+                  <input type="text" name="id" class="form-control id" placeholder="ID" readonly>
+              </div>
               <div class="form-group">
                   <input type="text" name="nombre" class="form-control nombre" placeholder="Nombre" readonly>
               </div>
@@ -117,7 +120,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <input type="hidden" name="id" class="id">  
+              <input type="hidden" name="asesorid" class="asesorid">  
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
               <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>
@@ -128,11 +131,10 @@
     </div>
   </div>
 <script src="/assets/js/jquery-3.4.1.js"></script>
-<script srcd="/assets/js/bootstrap.js"></script>
+<script src="/assets/js/bootstrap.js"></script>
 <script>
     $(document).ready(function(){
-            //showing data to edit modal      
-        $('#mytable').DataTable();
+            //showing data to edit modal
         $('#mytable').on('click','.edit',function(){
         var userid = $(this).data('userid');
         var nombre = $(this).data('nombre');
@@ -143,6 +145,7 @@
         var estado = $(this).data('estado');
         var valor = $(this).data('valor');
         var id = $(this).data('id');
+        var asesorid = $(this).data('asesorid');
         $('#EditModal').modal('show');
         $('.nombre').val(nombre);
         $('.apellido').val(apellido);
@@ -153,6 +156,7 @@
         $('.estado').val(estado);
         $('.id').val(id);
         $('.valor').val(valor);
+        $('.asesorid').val(asesorid);
       });
     });
 </script>

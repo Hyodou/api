@@ -240,6 +240,15 @@ app.post('/confirmaciones/update', (req, res) =>{
   });
 });
 
+app.post('/aregistro/update', (req, res) =>{
+  var user = req.body.asesorid;
+  let sql = "UPDATE registro SET valor = '"+req.body.valor+"', estadoid='"+req.body.estado+"' WHERE id="+req.body.id;
+  let query = mysqlConnection.query(sql, (err, results) => {
+    if(err) throw err;
+    res.redirect('/aregistro/'+user);
+  });
+});
+
 app.get('/asignaciones' , (req, res) => {
   let sql = "select r.id as registroid, clienteid, userid, nombrestadoventa as estado, nombre, apellido, email, telefono, direccion from registro r, cliente c, user u, estadoventa e where r.clienteid = c.userid and c.userid = u.cedula and r.estadoid = e.idestadoventa and r.estadoid = 2";
   let query = mysqlConnection.query(sql, (err, results) => {
@@ -408,7 +417,7 @@ app.post('/login', (req, res) =>{
               var dir = "/aregistro/"+un;
               res.redirect(dir);
             }else{
-              res.redirect('/');
+              res.redirect('/in');
             }
           });
         }
@@ -418,6 +427,18 @@ app.post('/login', (req, res) =>{
   }else{
     res.send('Ingrese Nombre de Usuario y Contraseña');
   }
+});
+
+app.get('/in', (req, res)=>{
+  res.render('in_view', {
+    
+  });
+});
+
+app.get('/regsus', (req, res)=>{
+  res.render('regsus_view', {
+    
+  });
 });
 
 app.get('/logout',  (req, res) =>{
@@ -431,6 +452,20 @@ app.get('/register', (req, res) =>{
   });
 });
 
+app.post('/register', (req, res) =>{
+  let data = {cedula: req.body.cedula, nombre: req.body.nombre, apellido: req.body.apellido, email: req.body.email, telefono: req.body.telefono};
+  let sql = "INSERT INTO user SET ?";
+  let query = mysqlConnection.query(sql, data,(err, results) => {
+    if(err) throw err;
+    let data2 = {userid: req.body.cedula, contraseñavendedor: req.body.contraseña};
+    let sql2 = "INSERT INTO vendedor SET ?";
+    let q2 = mysqlConnection.query(sql2, data2, (err2, results)=>{
+      if(err2) throw err2;
+    });
+    res.redirect('/regsus');
+  });
+});
+
 // registro para asesores
 app.get('/aregistro/:id', (req, res) =>{
   var user;
@@ -439,9 +474,9 @@ app.get('/aregistro/:id', (req, res) =>{
   let uquery = mysqlConnection.query(usql, (uerr, uresults) =>{
     if(uerr) throw uerr;
     user = ""+uresults[0].nombre+" "+uresults[0].apellido;
-    idv = uresults[0].idvendedor;
+    idv = uresults[0].idasesor;
   });
-  let sql = "select id, userid, valor, nombre, apellido, email, telefono, direccion from asignacion a, registro r, cliente c, user u where a.registroid = r.id and r.clienteid = c.userid and c.userid = u.cedula and asesorid = "+req.params.id;
+  let sql = "select asesorid, id, userid, valor, nombre, apellido, email, telefono, direccion from asignacion a, registro r, cliente c, user u where a.registroid = r.id and r.clienteid = c.userid and r.estadoid = 3 and c.userid = u.cedula and asesorid = "+req.params.id;
   let query = mysqlConnection.query(sql, (err, results) =>{
     if(err) throw err;  
     res.render('aregistro_view', {
