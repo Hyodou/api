@@ -360,7 +360,7 @@ app.get('/vregistro/:id', (req, res) =>{
 
 app.post('/vregistro/save/', (req, res) =>{
   let d1 = {cedula: req.body.cedula};
-  let s1 = "SELECT * FROM user WHERE cedula = ?":
+  let s1 = "SELECT * FROM user WHERE cedula = ?";
   let q1 = mysqlConnection.query(s1, d1, (e1, r1) =>{
     if(e1) throw e1;
     var l1 = r1.length;
