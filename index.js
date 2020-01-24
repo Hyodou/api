@@ -360,32 +360,33 @@ app.get('/vregistro/:id', (req, res) =>{
 
 app.post('/vregistro/save/', (req, res) =>{
   let d1 = {cedula: req.body.cedula};
-  let s1 = "SELECT * FROM user WHERE cedula = ?";
-  let q1 = mysqlConnection.query(s1, d1, (e1, r1) =>{
+  let s1 = "SELECT * FROM user WHERE cedula = "+req.body.cedula;
+  let q1 = mysqlConnection.query(s1, (e1, r1) =>{
     if(e1) throw e1;
     var l1 = r1.length;
-    if(l1>0){
+    if(l1 == 1){
       res.redirect('/alreg/'+req.body.vendedorid);
-    }
-  });
-  let data = {cedula: req.body.cedula, nombre: req.body.nombre, apellido: req.body.apellido, email: req.body.email, telefono: req.body.telefono};
-  let sql = "INSERT INTO user SET ?";
-  const vendedorid = req.body.vendedorid;
-  const clienteid = req.body.cedula;
-  let query = mysqlConnection.query(sql, data,(err, results) => {
-    if(err) throw err;
-    let data2 = {userid: req.body.cedula, direccion: req.body.direccion};
-    let sql2 = "INSERT INTO cliente SET ?";
-    let q2 = mysqlConnection.query(sql2, data2, (err2, results2)=>{
-      if(err2) throw err2;
-      let data3 = {clienteid, vendedorid};
-      let sql3 = "INSERT INTO registro SET ?";
-      let qc = mysqlConnection.query(sql3, data3, (err3, results3) =>{
-        if(err3) throw err3;
+    }else{
+      let data = {cedula: req.body.cedula, nombre: req.body.nombre, apellido: req.body.apellido, email: req.body.email, telefono: req.body.telefono};
+      let sql = "INSERT INTO user SET ?";
+      const vendedorid = req.body.vendedorid;
+      const clienteid = req.body.cedula;
+      let query = mysqlConnection.query(sql, data,(err, results) => {
+        if(err) throw err;
+        let data2 = {userid: req.body.cedula, direccion: req.body.direccion};
+        let sql2 = "INSERT INTO cliente SET ?";
+        let q2 = mysqlConnection.query(sql2, data2, (err2, results2)=>{
+          if(err2) throw err2;
+          let data3 = {clienteid, vendedorid};
+          let sql3 = "INSERT INTO registro SET ?";
+          let qc = mysqlConnection.query(sql3, data3, (err3, results3) =>{
+            if(err3) throw err3;
+          });
+        });
+        res.redirect('/vregistro/'+req.body.vendedorid);
       });
-    });
-    res.redirect('/vregistro/'+req.body.vendedorid);
-  });
+  }});
+  
 });
 
 app.get('/', (req, res) =>{
