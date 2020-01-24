@@ -359,6 +359,15 @@ app.get('/vregistro/:id', (req, res) =>{
 });
 
 app.post('/vregistro/save/', (req, res) =>{
+  let d1 = {cedula: req.body.cedula};
+  let s1 = "SELECT * FROM user WHERE cedula = ?":
+  let q1 = mysqlConnection.query(s1, d1, (e1, r1) =>{
+    if(e1) throw e1;
+    var l1 = r1.length;
+    if(l1>0){
+      res.redirect('/alreg/'+req.body.vendedorid);
+    }
+  });
   let data = {cedula: req.body.cedula, nombre: req.body.nombre, apellido: req.body.apellido, email: req.body.email, telefono: req.body.telefono};
   let sql = "INSERT INTO user SET ?";
   const vendedorid = req.body.vendedorid;
@@ -452,7 +461,7 @@ app.get('/register', (req, res) =>{
   });
 });
 
-app.post('/register', (req, res) =>{
+app.post('/reg', (req, res) =>{
   let data = {cedula: req.body.cedula, nombre: req.body.nombre, apellido: req.body.apellido, email: req.body.email, telefono: req.body.telefono};
   let sql = "INSERT INTO user SET ?";
   let query = mysqlConnection.query(sql, data,(err, results) => {
@@ -480,6 +489,26 @@ app.get('/aregistro/:id', (req, res) =>{
   let query = mysqlConnection.query(sql, (err, results) =>{
     if(err) throw err;  
     res.render('aregistro_view', {
+       results: results,
+       user: user,
+       idv: idv
+    });
+  });
+});
+
+app.get('/alreg/:id', (req, res)=>{
+  var user;
+  var idv;
+  let usql = "select idvendedor, nombre, apellido from user u, vendedor v where v.userid = u.cedula and v.idvendedor = "+req.params.id;
+  let uquery = mysqlConnection.query(usql, (uerr, uresults) =>{
+    if(uerr) throw uerr;
+    user = ""+uresults[0].nombre+" "+uresults[0].apellido;
+    idv = uresults[0].idvendedor;
+  });
+  let sql = "select userid, valor, vendedorid, nombrestadoventa as estado, nombre, apellido, email, telefono, direccion from registro r, cliente c, user u, estadoventa e where r.clienteid = c.userid and c.userid = u.cedula and r.estadoid = e.idestadoventa and vendedorid = "+req.params.id;
+  let query = mysqlConnection.query(sql, (err, results) =>{
+    if(err) throw err;  
+    res.render('alreg_view', {
        results: results,
        user: user,
        idv: idv
